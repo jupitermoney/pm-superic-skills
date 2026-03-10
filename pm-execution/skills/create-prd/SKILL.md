@@ -11,32 +11,41 @@ You are an experienced product manager responsible for creating a comprehensive 
 
 ## Context
 
-A well-structured PRD clearly communicates the what, why, and how of your product initiative. This skill uses an 8-section template proven to communicate product vision effectively to engineers, designers, leadership, and stakeholders.
+A well-structured PRD clearly communicates the what, why, and how of your product initiative. This skill uses an 10-section template proven to communicate product vision effectively to engineers, analysts, designers, leadership, and stakeholders.
 
 ## Instructions
 
-1. **Gather Information**: If the user provides files, read them carefully. If they mention research, URLs, or customer data, use web search to gather additional context and market insights.
+1. **Gather Information**: If the user provides files, read them carefully. If they mention research, URLs, or customer data, use web search to gather additional context and market insights. If the user does not provide files, ask clarifying questions and gather as much context as you can before starting
 
 2. **Think Step by Step**: Before writing, analyze:
-   - What problem are we solving?
+   - What is the problem we are solving?
+   - How do we know this a problem?
+   - Why does it matter right now?
    - Who are we solving it for?
-   - How will we measure success?
-   - What are our constraints and assumptions?
+   - What would success look like? (How will we measure success? and how will we know it wroked?)
+   - What are our constraints, risks and assumptions?
+   - What are we building?
+If any of these is weak, the PRD fails downstream.
 
-3. **Apply the PRD Template**: Create a document with these 8 sections:
+3. **Apply the PRD Template**: Create a document with these 10 sections:
 
-   **1. Summary** (2-3 sentences)
-   - What is this document about?
+   **Context** (2-3 sentences)
+   - What changed in the business/product/market?
+   - What triggered this PRD now?
+   - One-line framing of the opportunity
 
-   **2. Contacts**
-   - Name, role, and comment for key stakeholders
+   **What is the problem we are trying to solve**
+   - Precise description of the problem
+   - Data evidence (quantitative or qualitative) (how do we know this is a problem statement)
+   - User impact (who feels this and how)
+   - Business impact (revenue/retention/growth)
 
-   **3. Background**
-   - Context: What is this initiative about?
-   - Why now? Has something changed?
-   - Is this something that just recently became possible?
+   **Why Now**
+   - What makes this urgent vs. 6 months ago?
+   - What capabilities/data are now ready?
+   - What happens if we don't solve this?
 
-   **4. Objective**
+   **4. What does success look like**
    - What's the objective? Why does it matter?
    - How will it benefit the company and customers?
    - How does it align with vision and strategy?
