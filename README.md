@@ -420,7 +420,7 @@ Selected skills based on the work of:
 - Sean Ellis — [*Hacking Growth*](https://www.amazon.com/Hacking-Growth-Fastest-Growing-Companies-Breakout/dp/045149721X/)
 - Maja Voje — [*Go-To-Market Strategist*](https://gtmstrategist.com/)
 
-Curated by Paweł Huryn from [The Product Compass Newsletter](https://www.productcompass.pm).
+Curated by [Abhishek Choudhari](https://www.linkedin.com/in/abhishekchoudhari/).
 
 ## Contributing
 

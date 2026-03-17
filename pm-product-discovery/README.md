@@ -28,7 +28,7 @@ Product discovery skills for PMs: ideation, experiments, assumption testing, fea
 
 ## Author
 
-Paweł Huryn — [The Product Compass Newsletter](https://www.productcompass.pm)
+Abhishek Choudhari — [LinkedIn](https://www.linkedin.com/in/abhishekchoudhari/)
 
 ## License
 

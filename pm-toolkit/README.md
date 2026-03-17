@@ -19,7 +19,7 @@ PM utility skills: resume review, NDA drafting, privacy policy generation, and g
 
 ## Author
 
-Paweł Huryn — [The Product Compass Newsletter](https://www.productcompass.pm)
+Abhishek Choudhari — [LinkedIn](https://www.linkedin.com/in/abhishekchoudhari/)
 
 ## License
 
