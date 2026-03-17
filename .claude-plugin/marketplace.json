@@ -1,6 +1,6 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
-  "name": "pm-skills",
+  "name": "pm-superic-skills",
   "version": "1.0.2",
   "description": "Structured AI workflows for better product decisions. 65 domain-specific skills and 36 chained workflows across 8 PM plugins — from discovery to strategy, execution, launch, and growth.",
   "owner": {

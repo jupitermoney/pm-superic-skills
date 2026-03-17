@@ -1,6 +1,6 @@
-![GitHub stars](https://img.shields.io/github/stars/phuryn/pm-skills)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](https://github.com/phuryn/pm-skills/blob/main/LICENSE)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square)](https://github.com/phuryn/pm-skills/blob/main/CONTRIBUTING.md)
+![GitHub stars](https://img.shields.io/github/stars/abhishekchoudhari/pm-superic-skills)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](https://github.com/abhishekchoudhari/pm-superic-skills/blob/main/LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square)](https://github.com/abhishekchoudhari/pm-superic-skills/blob/main/CONTRIBUTING.md)
 
 # PM Skills Marketplace: The AI Operating System for Better Product Decisions
 
@@ -51,7 +51,7 @@ Commands are designed to flow into each other, matching the PM workflow. After a
 1. Open **Customize** (bottom-left)
 2. Go to **Browse plugins** → **Personal** → **+**
 3. Select **Add marketplace from GitHub**
-4. Enter: `phuryn/pm-skills`
+4. Enter: `abhishekchoudhari/pm-superic-skills`
 
 All 8 plugins install automatically. You get both commands (`/discover`, `/strategy`, etc.) and skills.
 
@@ -61,17 +61,17 @@ All 8 plugins install automatically. You get both commands (`/discover`, `/strat
 
 ```bash
 # Step 1: Add the marketplace
-claude plugin marketplace add phuryn/pm-skills
+claude plugin marketplace add abhishekchoudhari/pm-superic-skills
 
 # Step 2: Install individual plugins
-claude plugin install pm-toolkit@pm-skills
-claude plugin install pm-product-strategy@pm-skills
-claude plugin install pm-product-discovery@pm-skills 
-claude plugin install pm-market-research@pm-skills 
-claude plugin install pm-data-analytics@pm-skills
-claude plugin install pm-marketing-growth@pm-skills
-claude plugin install pm-go-to-market@pm-skills
-claude plugin install pm-execution@pm-skills
+claude plugin install pm-toolkit@pm-superic-skills
+claude plugin install pm-product-strategy@pm-superic-skills
+claude plugin install pm-product-discovery@pm-superic-skills
+claude plugin install pm-market-research@pm-superic-skills
+claude plugin install pm-data-analytics@pm-superic-skills
+claude plugin install pm-marketing-growth@pm-superic-skills
+claude plugin install pm-go-to-market@pm-superic-skills
+claude plugin install pm-execution@pm-superic-skills
 ```
 
 ### Other AI assistants (skills only)
