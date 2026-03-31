@@ -1,17 +1,18 @@
 ---
-description: Design a product metrics dashboard with North Star metric, input metrics, health metrics, and alert thresholds
-argument-hint: "<product or feature area>"
+description: Define your North Star Metric, classify the business game, build the full metrics framework, and design a dashboard with input metrics, health metrics, alert thresholds, and review cadence
+argument-hint: "<product, feature area, or 'fix our North Star'>"
 ---
 
-# /setup-metrics -- Product Metrics Dashboard Design
+# /setup-metrics -- Product Metrics Framework and Dashboard
 
-Design a comprehensive metrics framework for your product or feature — from selecting the right North Star to defining alert thresholds that catch problems early.
+Define the right North Star for your product, build the metrics framework around it, and design a dashboard that actually changes decisions. Works for new products, recently launched features, and teams whose existing metrics feel wrong.
 
 ## Invocation
 
 ```
-/setup-metrics SaaS project management tool
+/setup-metrics B2B SaaS for team collaboration
 /setup-metrics New checkout flow we just launched
+/setup-metrics Help me fix our North Star — we're tracking DAU but it doesn't feel right
 /setup-metrics             # asks what you're measuring
 ```
 
@@ -24,20 +25,49 @@ Ask the user:
 - What stage is it in? (pre-launch, recently launched, mature)
 - What are the current business goals or OKRs?
 - Do you have existing metrics? What's missing or broken?
-- What analytics tools are you using? (helps tailor implementation advice)
+- What analytics tools are you using?
 
-### Step 2: Define the Metrics Framework
+Apply the **metrics-dashboard** skill — starting with Phase 0 intake and pressure-testing before any metrics are proposed.
 
-Apply the **metrics-dashboard** skill:
+### Step 2: Classify the Business Game and Define the North Star
 
-**North Star Metric:**
-- Identify the single metric that best captures the value your product delivers to users
-- Validate against criteria: measures value delivery, is a leading indicator, is actionable
-- Define the metric precisely (formula, data source, time window)
+**Classify which game the product plays:**
+- **Attention**: Revenue from user time and engagement (media, social, ad-supported)
+- **Transaction**: Revenue from purchases between parties (e-commerce, marketplace)
+- **Productivity**: Revenue from efficiency gains (SaaS, tools, B2B)
+
+The game determines which NSM candidates make sense. An Attention product measuring transactions is tracking the wrong thing.
+
+**Propose 2-3 North Star candidates and validate each against 7 criteria:**
+
+| Criterion | Question |
+|---|---|
+| Expresses value | Does it reflect value delivered to customers, not just company activity? |
+| Leading indicator | Does it predict future revenue and retention, not just report the past? |
+| Measurable | Is it trackable with a precise formula and data source? |
+| Understandable | Can every person in the org define it in one sentence? |
+| Actionable | Can product, engineering, and marketing teams directly influence it? |
+| Not vanity | Would it still look good if users got the value through a bot or campaign fluke? |
+| Not gameable | Can it be improved without actually delivering real user value? |
+
+Recommend the strongest candidate with rationale. Explicitly name why common choices (DAU, revenue, sign-ups) were not selected.
+
+**Output the North Star definition:**
+```
+North Star Metric: [precise name]
+Definition: [formula — numerator / denominator / time window]
+Business game: [Attention / Transaction / Productivity]
+Why this metric: [connects to value delivery and revenue]
+Current value: [if known]
+Target: [goal]
+```
+
+### Step 3: Define the Full Metrics Framework
 
 **Input Metrics (3-5):**
 - Identify the levers that drive the North Star
-- Each input metric should be directly actionable by a team
+- Each input metric should be directly actionable by a named team
+- Together they should be MECE in explaining North Star movement
 - Map the causal chain: Input → North Star → Business Outcome
 
 **Health Metrics (3-5):**
@@ -46,10 +76,10 @@ Apply the **metrics-dashboard** skill:
 - Define "healthy" ranges and degradation thresholds
 
 **Counter-Metrics (1-2):**
-- Metrics that could indicate you're optimizing the wrong way
+- Metrics that could indicate you're optimising the wrong way
 - Example: if North Star is "daily active users", counter-metric is "session quality" to prevent empty engagement
 
-### Step 3: Design Alert Thresholds
+### Step 4: Design Alert Thresholds
 
 For each metric:
 
@@ -60,15 +90,25 @@ For each metric:
 - **Yellow**: Investigate — something may be off
 - **Red**: Act immediately — page someone or escalate
 
-### Step 4: Create Dashboard Spec
+### Step 5: Create Dashboard Spec
 
 ```
-## Metrics Dashboard: [Product/Feature]
+## Metrics Framework: [Product/Feature]
 
-**North Star**: [metric name]
-**Definition**: [precise formula]
-**Current value**: [if known]
-**Target**: [goal]
+**Business Game**: [Attention / Transaction / Productivity]
+
+### North Star Metric
+**Metric**: [precise name]
+**Definition**: [formula — numerator / denominator / time window]
+**Why this metric**: [value delivery, leads revenue, actionable]
+**Current value**: [if known] | **Target**: [goal]
+
+### Metrics Constellation
+North Star: [metric]
+├── Input: [metric 1] → driven by [team/action]
+├── Input: [metric 2] → driven by [team/action]
+├── Input: [metric 3] → driven by [team/action]
+└── Counter: [metric] → watch for [degradation signal]
 
 ### Input Metrics
 | Metric | Definition | Owner | Target | Current |
@@ -82,28 +122,24 @@ For each metric:
 | Metric | Why It Matters | Watch For |
 |--------|---------------|-----------|
 
-### Metrics Tree
-North Star: [metric]
-├── Input: [metric 1] → driven by [team/action]
-├── Input: [metric 2] → driven by [team/action]
-├── Input: [metric 3] → driven by [team/action]
-└── Counter: [metric] → watch for [degradation signal]
+### Anti-Patterns Avoided
+[Why we did not choose DAU, revenue, sign-ups, or other common but flawed metrics for this product]
 
 ### Implementation Notes
 - Data sources: [where each metric comes from]
 - Refresh frequency: [real-time / hourly / daily]
-- Tool recommendations: [based on user's stack]
+- Tool recommendations: [Amplitude / Mixpanel / Looker / Metabase — based on user's stack]
 
 ### Review Cadence
-- **Daily**: Glance at North Star and health metrics
-- **Weekly**: Review input metrics trends, discuss in team standup
+- **Daily**: North Star and health metrics
+- **Weekly**: Input metrics trends — discuss in team standup
 - **Monthly**: Deep dive — are inputs driving the North Star as expected?
-- **Quarterly**: Reassess the metrics framework itself
+- **Quarterly**: Reassess the framework itself
 ```
 
 Save as a markdown file to the user's workspace.
 
-### Step 5: Offer Next Steps
+### Step 6: Offer Next Steps
 
 - "Want me to **write SQL queries** to compute these metrics?"
 - "Should I **create OKRs** based on this metrics framework?"
