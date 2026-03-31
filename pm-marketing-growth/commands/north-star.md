@@ -27,7 +27,7 @@ Ask:
 
 ### Step 2: Classify the Business Game
 
-Apply the **north-star-metric** skill:
+Apply the **metrics-dashboard** skill (Phase 0 intake + business game classification + 7-criterion NSM validation):
 
 Identify which game the product is playing:
 - **Attention**: Revenue from user time/engagement (media, social, ad-supported)

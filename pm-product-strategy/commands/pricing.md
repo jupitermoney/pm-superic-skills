@@ -28,7 +28,7 @@ Ask:
 
 ### Step 2: Analyze Pricing Models
 
-Apply the **pricing-strategy** and **monetization-strategy** skills:
+Apply the **monetization-strategy** skill (Phase 0 intake + Phase 2 pricing design):
 
 Evaluate applicable models:
 - **Flat-rate**: Simple, predictable — best for commoditized products
