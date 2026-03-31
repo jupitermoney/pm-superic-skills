@@ -152,6 +152,24 @@ so I can [outcome — the value or result they gain].
 5. **Acceptance criteria** — written so QA can verify without interpretation; use numbers, states, and system responses
 6. **No tasks** — if implementation detail is needed, it belongs in the AC, not as a sub-item
 7. **Out of scope items from PRD** — do not create stories for them; reference them as excluded in the Epic's notes
+8. **Stories are conversation starters, not specifications** — the story captures intent and context; the team discovers the full implementation detail together in sprint planning and design sessions. Write enough to align intent, not enough to remove all ambiguity.
+
+### INVEST criteria (apply to every story before shipping the backlog)
+
+| Criterion | What it means | Failure signal |
+|---|---|---|
+| **Independent** | Can be developed and delivered without requiring another story to be done first | "This needs Story X to be done first" |
+| **Negotiable** | Scope, design, and implementation approach are open for team discussion | Story reads like a specification with no room for judgment |
+| **Valuable** | Delivers measurable value to users or the business on its own | Story only makes sense when combined with 3 other stories |
+| **Estimable** | Team can size it with reasonable confidence | Too vague to point, or too large to fit in one sprint |
+| **Small** | Completable in one sprint (5-13 days) | Any story estimated at L or XL should be split |
+| **Testable** | Every AC is verifiable by QA without interpretation | AC uses words like "works correctly" or "looks good" |
+
+### 3 C's of a good story (from XP)
+
+- **Card**: The story title and one-line summary. Short enough to fit on an index card. This is the placeholder for a conversation, not the conversation itself.
+- **Conversation**: The Job Story, Why, and design context. This is what the team discusses in sprint planning to align on intent and approach.
+- **Confirmation**: The Acceptance Criteria. These confirm that the conversation was understood correctly and the outcome was delivered.
 
 ---
 
@@ -241,7 +259,11 @@ STORY QUALITY
 [ ] Every story has a Why that connects to the epic goal
 [ ] Every story has 4-6 observable acceptance criteria
 [ ] No story is a task ("implement API for X" is a task, not a story)
-[ ] No story requires another story to deliver value
+[ ] No story requires another story to deliver value (Independent)
+[ ] Story is small enough to complete in one sprint (Small)
+[ ] Story can be sized by the team with reasonable confidence (Estimable)
+[ ] Every AC is verifiable without interpretation (Testable)
+[ ] Story reads as intent + context, not a full specification (Negotiable)
 [ ] Edge cases are stories or ACs — never silently ignored
 [ ] All P0 stories are dependency-free or dependencies are listed
 
@@ -257,10 +279,12 @@ COVERAGE
 ## Key Principles
 
 - **Only Epics and Stories** — never break into tasks; implementation details live in acceptance criteria
-- **Job Stories over User Stories** — situational context ("When I am...") is more actionable than role-based framing ("As a user...")
+- **Job Stories over User Stories** — situational context ("When I am...") is more actionable than role-based framing ("As a user..."); use "As a..." only when the role distinction is the most important thing to communicate
 - **WWA's Why** — every story includes strategic context so engineers can make scope trade-offs correctly
+- **Stories are conversations, not specs** — the story card is a placeholder for a conversation in sprint planning; write enough to align intent, not enough to remove the need for discussion
 - **Figma enriches, not replaces** — if Figma is available, use screen names and component states in AC; if not, write AC that is still implementable
 - **PRD gaps are surfaced, not hidden** — if the PRD doesn't say something, flag it rather than invent it
+- **INVEST is a quality gate, not a checklist** — if a story fails Independent or Small, split it; if it fails Testable, rewrite the ACs before delivering the backlog
 
 ---
 
