@@ -1,7 +1,7 @@
 {
   "name": "pm-market-research",
   "version": "1.0.3",
-  "description": "Market research skills for PMs: user personas, market segmentation, sentiment analysis, competitive analysis, and user research synthesis.",
+  "description": "Market research skills for PMs: user personas, market segmentation, sentiment analysis, competitive analysis, user research synthesis, and Jupiter research library lookup.",
   "author": {
     "name": "Abhishek Choudhari",
     "url": "https://www.linkedin.com/in/abhishekchoudhari/"
@@ -15,7 +15,9 @@
     "market-sizing",
     "TAM",
     "SAM",
-    "SOM"
+    "SOM",
+    "research-library",
+    "user-research"
   ],
   "homepage": "https://www.linkedin.com/in/abhishekchoudhari/",
   "license": "MIT"

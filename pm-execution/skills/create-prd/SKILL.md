@@ -28,6 +28,16 @@ Silently attempt to call the Atlassian MCP tool. If the connection is active, no
 
 Do not block PRD creation if MCP is unavailable. Proceed regardless.
 
+**Step 1b: Surface existing research (optional)**
+
+Tell the user:
+
+> "Before we start — if you want to ground this PRD in existing Jupiter user research, run `/find-research [topic]` to check what studies already exist. It takes 30 seconds and gives you a ready-to-paste evidence block for the Problem Statement and User Insights sections. You can skip this and add research later."
+
+Do not block or wait. Proceed to Step 2 immediately after showing this message.
+
+---
+
 **Step 2: Size the initiative**
 
 Before asking anything else, ask the user one question to determine PRD scope:
