@@ -3,6 +3,13 @@ CLAUDE.md
 .DS_Store
 **/.DS_Store
 
+# VoC reports — generated output, not tracked in repo
+voc-reports/
+
+# Xtraboost dashboard — local only
+xtraboost-dashboard-spec.md
+xtraboost-dashboard.html
+
 # Apps Script files with private sheet IDs / emails — keep local only
 **/*.gs
 !**/*.template.gs
