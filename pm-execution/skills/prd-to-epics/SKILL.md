@@ -1,7 +1,6 @@
 ---
 name: prd-to-epics
 description: "Convert a PRD into Jira-ready Epics and Stories using Job Story format (When/I want/So I can) with WWA strategic context. Reads PRD from text, file, or Confluence. Accepts Figma URL for design context. Outputs Epic + Story hierarchy only — no tasks. Use when breaking down a PRD into a sprint-ready backlog."
-tool_integration: Atlassian, Figma
 ---
 
 # PRD to Epics and Stories
@@ -20,6 +19,43 @@ Each story uses a hybrid format combining **Job Stories** (When/I want/So I can)
 ---
 
 ## Step 0: Gather Inputs
+
+### Overlapping Epic Check
+
+Before creating anything in Jira, search the board for existing epics that might overlap with this initiative. Use `searchJiraIssuesUsingJql` with a query like:
+
+```
+project = [PROJECT_KEY] AND issuetype = Epic AND summary ~ "[key initiative keywords]" ORDER BY created DESC
+```
+
+Run 1-2 searches using the most distinctive keywords from the PRD (feature name, user problem, component name). If any existing epics are found that cover similar scope, flag them before proceeding:
+
+> "I found existing epics that may overlap with this initiative:
+> - [EPIC-KEY]: [Epic summary] (Status: [status])
+> - [EPIC-KEY]: [Epic summary] (Status: [status])
+>
+> Do you want to add stories to one of these existing epics instead of creating a new one? Or confirm you want a new epic and I'll proceed."
+
+Wait for the user's answer before creating anything. If no overlapping epics are found, proceed without flagging.
+
+### Jira Project Setup Check
+
+Before creating anything in Jira, run `getJiraProjectIssueTypesMetadata` for the target project. Use the correct issue type names and IDs returned — never assume "Story" or "Epic" exist. Record:
+- The issue type for epics (usually "Epic")
+- The issue type for child work items (may be "Task", "Story", or "Sub-task" depending on the project)
+
+If no Jira project has been specified, ask: "Which Jira project and board should I create these in?"
+
+### Expected Impact Check
+
+Scan the PRD for an Expected Impact statement. Look in the success metrics, objectives, or overview sections — use the primary metric target as the Expected Impact value (e.g. "Reduce president escalations to 0 within 60 days of launch").
+
+- If found: use it to populate the Expected Impact field on the Epic automatically. No need to ask the user.
+- If not found: warn the user before proceeding:
+
+> "Note: Expected Impact is a mandatory field on every Epic in Jira and I couldn't find a clear target in the PRD. I'll create the Epic now, but fill this field before handing the initiative to tech."
+
+Proceed with Epic creation regardless. Do not block on this field.
 
 ### PRD Source Check
 
@@ -43,12 +79,10 @@ Before proceeding, determine where the PRD lives:
 
 ### Figma Source Check
 
-1. **If a Figma URL is provided** — use the Figma MCP (`get_design_context`) to fetch design context, flows, and component names. Use these to enrich story acceptance criteria with specific UI states and interactions.
-2. **If no Figma URL is provided**, ask once:
+Figma designs are often not ready when a PRD is being broken into epics. Do not block on this.
 
-   > "Do you have a Figma design file for this feature? If yes, share the URL and I'll pull in screen flows and component details to make the acceptance criteria more precise. If not, I'll proceed with what's in the PRD."
-
-   If the user says no or skips — proceed without design context.
+1. **If a Figma URL is provided** — use the Figma MCP (`get_design_context`) to fetch design context, flows, and component names. Use these to enrich story acceptance criteria with specific screen names and interaction states.
+2. **If no Figma URL is provided** — proceed without it. In acceptance criteria, note "Design: TBD — link Figma when available" rather than asking the user to wait for design.
 
 ---
 
@@ -73,12 +107,11 @@ If the PRD is missing critical sections, note them as gaps in the output but do 
 
 ## Step 2: Identify Epics
 
-Group features and capabilities into **3–7 Epics** based on:
+**Default to ONE epic per initiative.** Only propose multiple epics when:
+- The initiative explicitly spans multiple quarters or teams working in parallel
+- The PRD has distinct phases that will be picked up and completed separately, not together
 
-- **User journey segments** (e.g. Onboarding, Core Loop, Settings)
-- **Feature areas** (e.g. Search, Checkout, Notifications)
-- **Release phases** (e.g. Phase 1 MVP, Phase 2 Enhancements)
-- **System capabilities** (e.g. Backend API, Data Pipeline, Admin Tools)
+For small and medium initiatives: propose 1 epic. For large initiatives: propose multiple epics with a clear rationale for the split.
 
 **Epic naming rules:**
 - Name each Epic as an **outcome**, not a feature list
@@ -232,16 +265,61 @@ These need answers before stories can be estimated or started:
 
 ---
 
-## Step 6: Offer Next Actions
+## Step 6: Show Structure and Confirm Before Creating in Jira
 
-After delivering the backlog, offer:
+Before creating anything in Jira, always show a proposed structure summary and wait for explicit confirmation. Format it as:
+
+```
+Here is the proposed Jira structure. Confirm and I will create everything:
+
+EPIC: [Epic title]
+├── PRD task:    PRD — [Initiative name]
+├── Design task: Design — [Initiative name]
+├── [Feature task 1 title]
+├── [Feature task 2 title]
+├── [Feature task 3 title]
+└── [Feature task N title]
+
+Total: 1 epic, N tasks
+
+Type yes to create in Jira, or tell me what to change.
+```
+
+If multiple epics are proposed, show all of them in the same structure. Do not create anything until the user confirms.
+
+## Step 7: Create in Jira
+
+After the user confirms the structure, create items in this order using the issue types confirmed in Step 0:
+
+1. Create the Epic with:
+   - Summary: epic title
+   - Description: one-line problem statement + link to PRD + link to Figma (if available)
+   - Expected Impact: value provided by the user in Step 0
+
+2. Create the PRD task as a child of the Epic:
+   - Summary: "PRD — [Initiative name]"
+   - Description: link to the Confluence PRD page + note to set committed date when moving to In Progress
+
+3. Create the Design task as a child of the Epic:
+   - Summary: "Design — [Initiative name]"
+   - Description: link to the Figma file + note that this must be a separate task from the PRD task, with its own committed date
+
+4. Create each feature breakdown task as a child of the Epic:
+   - Summary: action-oriented title from the backlog
+   - Description: job story + acceptance criteria + priority
+   - Include a note: "Tech to add committed dates and original estimates when picking up"
+
+Return a table of all created items with keys and URLs.
+
+## Step 8: Offer Next Actions
+
+After delivering the backlog and creating in Jira, offer:
 
 > **What would you like to do next?**
-> - **A** — Create these Epics and Stories directly in Jira (requires Atlassian MCP)
-> - **B** — Generate test scenarios for a specific Epic
-> - **C** — Run a pre-mortem on this backlog
-> - **D** — Export as markdown file
-> - **E** — Refine a specific Epic or Story
+> - **A** — Generate test scenarios for a specific Epic
+> - **B** — Run a pre-mortem on this backlog
+> - **C** — Export as markdown file
+> - **D** — Refine a specific Epic or Story
 
 ---
 

@@ -42,14 +42,25 @@ Do not block or wait. Proceed to Step 2 immediately after showing this message.
 
 Before asking anything else, ask the user one question to determine PRD scope:
 
-> "Before we start — how big is this initiative?
-> - **Quick build** (days to 2 weeks): I'll create a one-page PRD
-> - **Medium feature** (2–6 weeks): I'll create a focused full PRD
-> - **Large initiative** (quarter or more): I'll create a comprehensive PRD with phasing, risks, and experiment design
+> "Before we start — what is the effort level for this initiative?
+> - **Low** (1–5 days dev): I'll write a 1-page PRD — overview, user stories, edge cases, 1-2 metrics, out of scope
+> - **Medium** (1–6 weeks dev): I'll write a 2-4 page PRD — problem, user stories, edge cases, 2-3 metrics, open questions (PM-level only)
+> - **High** (quarter or more): I'll write a full PRD with phasing, risks, full metric hierarchy, and experiment design
 >
 > Take your best guess — we can adjust as we go."
 
-Use the answer to calibrate output length and depth throughout.
+Use this answer to drive section selection, depth, and metric count throughout. The rules are:
+
+**Low effort PRD — 1 page max**
+Sections: Overview (3 sentences), User Stories with AC, Edge Cases, Success Metrics (1-2 primary only), Out of Scope
+Skip entirely: phasing, value proposition, market segments, guardrail metrics, detailed open questions
+
+**Medium effort PRD — 2-4 pages**
+Sections: Overview, Problem and evidence (brief), User Stories with AC, Edge Cases, Success Metrics (2-3, no guardrails unless a specific risk warrants it), Out of Scope, Open Questions (PM-level only, if genuinely unresolved)
+Skip entirely: phasing (unless 2+ distinct phases exist), value proposition, market segments
+
+**High effort PRD — full template**
+All sections apply. Include phasing only if 2+ distinct phases exist. Full metric hierarchy. Experiment design if A/B testing is relevant.
 
 **Step 3: Frame the process**
 
@@ -87,6 +98,9 @@ Then, based on gaps in their input, selectively ask from the following question 
 - Do you have a solution hypothesis, or is this still open discovery?
 - Which teams or systems will this depend on?
 - Are there hard constraints — technical, legal, regulatory, or timeline?
+
+**Existing Infrastructure (ask if comms or integrations are in scope)**
+- Are there any existing notifications (SMS, WhatsApp, email, push) already going to users for this event or related events? This prevents speccing what already exists.
 
 **Audience and Output (ask once, at the end)**
 - Who is the primary reader: engineering, design, leadership, or cross-functional?
@@ -178,9 +192,9 @@ Create a document with these 10 sections:
    - Approach overview
    - Key Features (detailed feature descriptions)
    - UX/Prototypes (wireframes, user flows)
-   - Technology (optional, only if relevant)
    - Prioritisation (P0/P1/P2)
    - Out of scope (explicit)
+   - Implementation details (optional): only include here if they directly affect product scope or user behaviour — e.g. a specific API field that determines what is shown, or a third-party SDK that changes the UX. Do not include service architecture, infra specifics, or internal API design — those belong in the tech design document that engineering produces.
 
    **Edge Cases & Risks**
    - Edge cases with handling
@@ -188,13 +202,17 @@ Create a document with these 10 sections:
    - Rollback plan
 
    **Release**
+   - ONLY include this section if the initiative has 2 or more distinct, sequenced phases. If everything ships in a single phase, skip this section entirely.
    - Phase breakdown with scope
    - Dependencies and sequencing
    - Avoid exact dates; use relative timeframes
-   - Definition of done of a phase (how would you know when to move to next phase)
-   
+   - Definition of done per phase (how you know when to move to the next phase)
+
    **Open Questions**
-   - Explicitly unresolved items with owners
+   - ONLY include PM-level questions — things the PM needs to resolve to finish or refine the PRD.
+   - Do NOT include tech questions. Engineering owns their open questions in the tech design document.
+   - If no genuine PM-level questions exist, omit this section entirely.
+   - Format: Question | Owner | Deadline
      
 **Step 8: Use Accessible Language**
 
@@ -218,13 +236,27 @@ Always present the PRD as a draft first. Do not publish automatically. Tell the 
 
 > "Here is your PRD draft. Review it and let me know if you want to change anything. Once you confirm it is ready, I will publish it to Confluence."
 
+**Step 11b: Figma refresh (run when design becomes available after PRD is written)**
+
+Figma is rarely ready before a PRD is written. When the user shares a Figma link after the PRD already exists, do NOT rewrite the whole PRD. Run a targeted refresh instead:
+
+1. Call `get_design_context` with the Figma node ID to extract screens, flows, and component states
+2. Identify only what has changed or is newly visible:
+   - New entry points not in the original PRD
+   - User story acceptance criteria that can now reference specific screen names or states
+   - Edge cases made visible by the design (error states, empty states, loading states)
+   - Any flows or interactions that contradict the PRD's current spec
+3. Present only the sections that need updating — do not re-output the whole PRD
+4. Ask the user to confirm the changes before applying them
+
 **Step 12: Confirm and Publish to Confluence**
 
 Only after the user explicitly says the PRD is ready to publish:
 
-1. If Atlassian MCP is connected, ask: "Which Confluence space should I publish this to? (e.g. PROD, Growth, Platform — or paste a space URL)"
-2. Use `createConfluencePage` to publish the PRD to the specified space in markdown format
-3. Return the Confluence page URL to the user once created
+1. Always publish to the shared **PROD** Confluence space. Never publish to a personal space (space keys starting with `~`) even if the user has write access there. Personal spaces are for drafts and notes, not PRDs.
+2. Search for the "PRDs" parent page in the PROD space using `searchConfluenceUsingCql` with a query like `space = "PROD" AND title = "PRDs"`. If found, create the new page as a child of that page. If not found, create it at the root of the PROD space and note the location to the user.
+3. Use `createConfluencePage` to publish the PRD in markdown format.
+4. Return the Confluence page URL to the user once created.
 
 If MCP is not connected, save the PRD as a markdown file instead: `PRD-[product-name].md` and confirm the file path to the user.
 
