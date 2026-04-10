@@ -49,9 +49,200 @@ Extract and note:
 
 **Then, before looking at what the PRD covers, generate the expected coverage list for this domain.** This is the standard against which gaps are found.
 
-Use the domain checklists in `~/.claude/configs/pm/review-prd-learnings.md` as your starting point. Extend them with your reasoning for this specific feature.
+Use the domain checklists below as your starting point. Extend them with your reasoning for this specific feature.
 
 Write out the expected coverage list explicitly. This makes the gap analysis transparent, not impressionistic.
+
+---
+
+### Domain Gap Checklists
+
+#### Identity / KYC / Auth flows
+
+**Happy path**
+- [ ] Full flow from entry to verified state is described step by step
+- [ ] New account state(s) created are named and defined
+- [ ] Attributes stored per state are specified (what is written, when, where)
+
+**Existing user treatment**
+- [ ] Users already in a legacy or partial state are explicitly handled
+- [ ] Users who previously failed or were rejected have a defined path
+- [ ] Users who partially completed the flow and abandoned have a re-entry path
+- [ ] High-risk or flagged users (HKYC, watchlist, previous fraud signals) have a defined routing decision
+
+**Failure and error states**
+- [ ] OTP or verification step fails: retry limit defined, fallback defined
+- [ ] Liveliness or biometric check fails: retry limit, fallback, manual override path
+- [ ] Third-party service (DigiLocker, CKYC, bureau) times out or returns error: system behavior defined
+- [ ] Partial success states defined (step A succeeds, step B fails: what state is the user in?)
+- [ ] Account created in wrong state: detection and remediation path
+
+**Data and identity edge cases**
+- [ ] Name mismatch between identity sources: tolerance threshold defined, routing decision defined
+- [ ] Duplicate identity detected: handling defined
+- [ ] PAN/Aadhaar/identity document has formatting issues or edge characters: handling defined
+
+**Regulatory and compliance**
+- [ ] Regulatory basis for the approach is cited (not assumed)
+- [ ] Written confirmation from compliance is required or already obtained
+- [ ] Audit trail requirements are specified
+- [ ] Account state at regulatory deadline is defined
+- [ ] What happens to the account if the deadline is missed: freeze, downgrade, close, or notify
+
+**Re-engagement and second-path users**
+- [ ] Existing stuck users who could benefit from the new path are addressed or explicitly deferred
+- [ ] Re-entry into the flow mid-way through is handled
+
+---
+
+#### Payments / Transactions
+
+**Happy path**
+- [ ] Payment lifecycle from initiation to settlement is fully described
+- [ ] Each state in the payment state machine is named and defined
+- [ ] Success confirmation to user is specified (when, how, what data shown)
+
+**Failure and error states**
+- [ ] Payment fails at each possible failure point: network, bank, beneficiary, limit
+- [ ] Idempotency handling: what happens if the same request is sent twice
+- [ ] Partial settlement or partial failure: what state is the payment in
+- [ ] Timeout handling at each external call: retry logic, fallback, and user communication
+- [ ] Bank or PSP downtime: queue behavior, retry window, user notification
+
+**Reversal and reconciliation**
+- [ ] Refund flow is defined (even if out of scope, it must be stated as out of scope)
+- [ ] Reconciliation: how does the system detect and handle mismatches
+- [ ] Duplicate transaction detection: mechanism defined
+
+**Regulatory and limits**
+- [ ] Transaction limits per user tier are defined or linked
+- [ ] Limit breach behavior: block, queue, or alert
+- [ ] RBI or regulatory reporting requirements for transaction types are addressed
+
+**User-facing states**
+- [ ] Pending state: what does the user see and for how long
+- [ ] Failed state: what does the user see, what action can they take
+- [ ] Disputed state: if applicable, handling defined
+
+---
+
+#### User Onboarding / Activation
+
+**Flow completeness**
+- [ ] Every step in the onboarding sequence is named
+- [ ] Minimum viable completion state is defined (what must a user do to be "activated")
+- [ ] Skip or defer options and their consequences are defined
+
+**Drop-off and re-entry**
+- [ ] Users who abandon mid-flow: what state are they in, what do they see on return
+- [ ] Re-entry from multiple surfaces (push, email, direct open): behavior consistent
+- [ ] Partial completion state: what features are accessible, what is gated
+
+**Existing users**
+- [ ] Users who completed onboarding before this change: are they affected
+- [ ] Users in a legacy onboarding state: migration path or explicit exclusion
+
+**Personalisation and branching**
+- [ ] If onboarding branches by user type, each branch is described
+- [ ] Default branch is defined for users who don't match a specific branch
+
+**Measurement**
+- [ ] Funnel tracking events are specified per step (not just start and end)
+- [ ] Activation definition is specific and measurable
+
+---
+
+#### Growth / Engagement / Retention
+
+**Targeting**
+- [ ] Segment definition is behavioral, not demographic
+- [ ] Entry criteria into the cohort are specific and testable
+- [ ] Exit criteria (when does a user leave this segment) are defined
+- [ ] Overlap with other active campaigns or nudges is addressed
+
+**Message and channel**
+- [ ] Channel selection rationale is stated
+- [ ] Frequency caps are defined (per user, per campaign, per day)
+- [ ] Opt-out handling: what happens to a user who opts out
+
+**Failure and edge states**
+- [ ] User takes the desired action before receiving the nudge: suppression logic defined
+- [ ] User is in a restricted state (no app access, account frozen): nudge behavior defined
+- [ ] Message delivery fails: retry logic, fallback channel
+
+**Measurement**
+- [ ] Attribution model is defined (last touch, first touch, assisted)
+- [ ] Holdout group or control group is specified
+- [ ] Measurement window is defined per metric
+
+---
+
+#### Compliance / Regulatory
+
+**Regulatory grounding**
+- [ ] Specific regulation, section, and date are cited
+- [ ] Compliance team has confirmed the interpretation in writing (or this is flagged as open)
+- [ ] Legal team has confirmed applicability to this product type
+
+**User impact by state**
+- [ ] Every existing user state is mapped to the new requirement
+- [ ] Users who cannot comply (edge cases) have a defined handling path
+- [ ] Timeline for existing users to comply is defined
+
+**Audit and reporting**
+- [ ] What records must be kept, in what format, for how long
+- [ ] How compliance will be demonstrated to the regulator
+
+**Rollback**
+- [ ] If the regulatory interpretation changes, rollback path is defined
+- [ ] Feature flag or kill switch exists
+
+---
+
+#### B2B / Enterprise Features
+
+**Permission and role model**
+- [ ] All roles affected by this feature are named
+- [ ] Permission boundaries: what each role can and cannot do
+- [ ] Inheritance: does a permission cascade to sub-accounts or child organisations
+
+**Multi-tenancy**
+- [ ] Data isolation: is tenant data correctly scoped
+- [ ] Config isolation: can one tenant's settings affect another
+
+**Admin and operator flows**
+- [ ] Admin path is specified alongside user path
+- [ ] Audit log requirements for admin actions are stated
+
+**Migration and rollout**
+- [ ] Existing tenants: opt-in, opt-out, or forced migration
+- [ ] Beta or pilot rollout plan is specified
+
+---
+
+#### Data / Platform / Infrastructure
+
+**Backwards compatibility**
+- [ ] Breaking changes are identified and flagged
+- [ ] Migration path for consumers of deprecated interfaces
+- [ ] Versioning strategy stated
+
+**Data integrity**
+- [ ] Data validation at ingestion is defined
+- [ ] Handling for malformed, duplicate, or late-arriving data
+- [ ] Schema migration: forward and backward compatibility
+
+**Failure handling**
+- [ ] Pipeline failure: detection, alerting, replay behavior
+- [ ] Partial failure: what data is safe to use, what is not
+- [ ] SLA and recovery time objective (RTO) stated
+
+**Operational**
+- [ ] Monitoring and alerting requirements stated
+- [ ] On-call runbook requirements identified
+- [ ] Rollback mechanism exists and is tested
+
+---
 
 ---
 
@@ -59,12 +250,22 @@ Write out the expected coverage list explicitly. This makes the gap analysis tra
 
 Go through the PRD looking for two things:
 
-**Unstated assumptions** — claims presented as fact that are not evidenced:
-- "Users will..." statements with no research backing
+**Unstated assumptions** — claims presented as fact that are not evidenced. Common patterns to hunt for:
+
+**The "users will" assumption** — Claim takes a user behavior for granted without research. "Users will complete V-CIP within 2 years." On what evidence? What is the incentive model?
+
+**The "similar to" analogy** — A decision is justified by comparison to another feature or competitor without evidence the analogy holds. "This is like how Stripe handles disputes." Does this product have Stripe's infrastructure and user sophistication?
+
+**The "compliance said it's fine" assumption** — Regulatory permission is assumed from a verbal conversation or general reading of a policy, not from written sign-off. High risk in fintech, health, and B2B.
+
+**The "engineering can decouple this" assumption** — A solution assumes two components can be separated or reused without engineering confirmation. Common when the solution looks easy from the product side.
+
+**The "if we build it they will come" assumption** — Adoption is assumed from feature existence, not from a behavior change mechanism. No nudge, no limit, no incentive is defined to drive the desired action.
+
+**The causal leap** — "Account creation rate will go from 3.8% to 35%." What is the mechanism? What is the model? Is the target based on a funnel calculation or a wish?
+
+Other assumption types:
 - Market size or segment claims with no methodology
-- Technical feasibility assumed without engineering input
-- "This is similar to X" analogies used to justify decisions
-- Causal assumptions ("if we build X, Y will follow")
 - Competitive claims without cited evidence
 
 **Bias patterns** — structural problems in how the problem or solution is framed:
@@ -148,6 +349,8 @@ Common deductions:
 - No measurement timeline: -2
 - Measurement method not specified: -2
 
+**Calibration rule:** If metric targets are self-flagged as directional estimates and the PRD maturity is pre-engineering or pre-launch, treat this as a blocking gap — not a minor note. An unconfirmed business case at sign-off stage means the initiative has not been validated. Deduct 5 pts from this dimension and flag as a Priority Fix.
+
 ---
 
 #### Dimension 5: Solution Design (15 pts)
@@ -184,6 +387,8 @@ Common deductions:
 
 This is the dimension where domain knowledge matters most. Score against the expected coverage list generated in Step 2, not against what the PRD authors thought to include.
 
+**Calibration rule:** An edge case table that looks complete is not the same as complete edge case coverage. A well-formatted table only covers the scenarios the author thought of, not the scenarios the domain requires. Always generate the expected coverage list in Step 2 before reading the edge case section, then score against the list — not against the table.
+
 | Sub-dimension | Max | What earns full marks |
 |---|---|---|
 | Domain-specific failure states covered | 8 | The scenarios that must exist for this domain type are present. Partial success states, error recovery, re-entry behavior, data mismatch handling. |
@@ -209,6 +414,8 @@ Common deductions:
 - No timeline or milestone structure: -3
 - Open questions answerable from existing content: -1 each
 - Dependencies listed but unowned: -2
+
+**Calibration rule:** If timeline is entirely absent at pre-engineering or pre-launch stage, score this dimension 0–1. An absent timeline is not a documentation gap — it is a project risk. Nobody knows if the launch is at risk when compliance, legal, or engineering sign-off have no dates attached.
 
 ---
 

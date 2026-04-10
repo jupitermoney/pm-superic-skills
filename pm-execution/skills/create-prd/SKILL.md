@@ -142,6 +142,26 @@ If any of these is weak, flag it explicitly in the PRD rather than silently fill
 
 **Step 7: Apply the PRD Template**
 
+**Header block — always open with this before Section 1. This is not a numbered section.**
+
+```
+| **Product overview** |  |
+| --- | --- |
+| 📅 Target date | TBD (or date if known) |
+| 🟡 Document status | DRAFT / REVIEW / FINAL |
+| 🏃 Team members | [Names — not roles] |
+| **Quick links** |  |
+| 🎨 Designs | [Figma link or TBD] |
+| 🗃️ Work tracker | [Jira epic link or TBD] |
+| 📹 Loom demo | TBD |
+```
+
+Header rules:
+- Always include all rows. Write "TBD" if the value is not known — never omit a row.
+- Document status uses a colour emoji: 🟡 DRAFT, 🔵 REVIEW, 🟢 FINAL
+- Team members: list names, not roles
+- Figma and Jira links are mandatory — TBD is acceptable if not yet available
+
 Create a document with these 10 sections:
 
    **Context** (2-3 sentences)
@@ -168,12 +188,30 @@ Create a document with these 10 sections:
    **What does success look like**
    How would we know we have solved the problem?
    Key Results: How will you measure success? (Use SMART OKR format)
-   Present as a table to have starting point (where are we today) and end point (where do we want to get to)
-   
-   - Primary metric (the one number that matters)
-   - Supporting metrics (2-4)
-   - Guardrail metrics (what must NOT worsen)
-   - Measurement timeline
+
+   Always use this 4-column table format for metrics:
+
+   | Metric | Current | Target | Measurement |
+   |--------|---------|--------|-------------|
+   | [Name] | [Baseline or "TBD — establish at launch"] | [Number + timeframe, e.g. "45% within 90 days of launch"] | [Tool + event, e.g. "Amplitude — bottomsheet_engaged"] |
+
+   Table rules:
+   - Never leave Current blank — write "TBD — establish at launch" if unknown
+   - Target must include a timeframe — "increase X" is not a target
+   - Measurement must name the tool or event — not just "tracked in Amplitude"
+   - No "improve X" targets — always directional with a number
+
+   Metric types:
+   - **Primary metrics** — metrics with an existing baseline that directly reflect the feature's core job and are attributable to this feature. Use these first.
+   - **Secondary metrics** — new behaviours with no baseline (label as "TBD — establish at launch"), downstream signals, or metrics influenced by multiple features simultaneously.
+   - **Guardrail metrics** — what must NOT worsen. Named specifically, not "we'll monitor."
+
+   Engagement metrics priority order (when choosing which metrics to track):
+   1. Reach — users shown the feature vs total eligible
+   2. Engagement — users who interacted vs users shown
+   3. Dismissal — users who dismissed without action (negative signal)
+   4. Sentiment — NPS, app store, qualitative feedback
+   5. Outcome — downstream conversion tied to the feature's job
 
    **Market Segment(s)**
    Optional - do only if needed - validate from the user
@@ -266,7 +304,14 @@ If MCP is not connected, save the PRD as a markdown file instead: `PRD-[product-
 - Link each section back to the overall strategy
 - Flag assumptions clearly so the team can validate them
 - Keep the document concise but complete
-- Avoid using acronyms, dont use em dashes anywhere
+- Avoid using acronyms, don't use em dashes anywhere
+
+**Confluence formatting rules — apply when publishing:**
+- No horizontal rules (`---`) between sections. Confluence renders these as visual dividers that break PDF export.
+- No `>` symbol at the start of table cells. Confluence parses this as a blockquote, creating an unwanted vertical bar. Write "above 30%" not ">30%", "below 10%" not "<10%".
+- Bold only for metrics that are the core of a claim, or key decisions that need to stand out when scanning. Never bold entire sentences or to fill visual space.
+- No emojis in body content (sections 1–10). Emojis are only used in the header block metadata table.
+- Tables preferred over bullet lists for structured comparisons.
 
 ## The 5 Core Skills
 

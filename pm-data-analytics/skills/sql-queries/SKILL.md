@@ -17,7 +17,7 @@ Transform natural language requirements into optimized SQL queries across multip
 
 ### Step 2: Process Your Request
 - Clarify the exact data you need to retrieve or analyze
-- Confirm the SQL dialect (BigQuery, PostgreSQL, MySQL, Snowflake, etc.)
+- **Default to BigQuery** unless the user specifies otherwise. If no platform is mentioned, assume BigQuery and proceed — do not ask.
 - Ask for any additional requirements (filters, aggregations, sorting)
 
 ### Step 3: Generate Optimized Query
@@ -26,11 +26,26 @@ Transform natural language requirements into optimized SQL queries across multip
 - Add performance considerations for large datasets
 - Provide alternative approaches if applicable
 
-### Step 4: Explain and Test
+**Query style standards (apply to every query):**
+- CTEs preferred over subqueries — name each CTE for what it produces, not what it selects from
+- Explicit column aliases in SELECT — no `SELECT *` in final output
+- Date filters always explicit — no implicit date assumptions
+- NULL handling always explicit — use `COALESCE` or `IFNULL` where relevant
+- Every major claim in the query must be traceable to a specific column or calculation — no orphaned aggregations
+
+### Step 4: Explain and Output
 - Explain the query logic in plain English
 - Suggest how to test or validate results
 - Offer tips for performance optimization
 - If you want, generate a test script or sample data
+
+**Output format standards:**
+- Present results in tables where possible
+- Always include row count and date range in the summary line
+- Flag data quality issues before drawing conclusions — nulls, unexpected values, incomplete date ranges
+- Lead with the business question being answered, not the query mechanics
+- Anchor findings to a metric or decision — "this shows X, which means Y for [decision]"
+- State assumptions transparently, especially cohort definitions and attribution windows
 
 ## Usage Examples
 

@@ -42,23 +42,29 @@ OKRs are fundamentally about: (1) Setting a single, inspiring goal. (2) Empoweri
 
 4. **Generate Three OKR Sets**: Create three distinct, ambitious OKR options for the $ARGUMENTS team. For each set:
    - Start with a clear, inspiring Objective statement
-   - Define exactly 3 Key Results that are:
-     - Measurable (can be tracked numerically)
-     - Achievable but ambitious (60-70% confidence level)
-     - Aligned with company strategy
+   - Define exactly 3 Key Results (3 maximum — if more are needed, the objective is too broad)
+   - Each KR must have a named owner
+
+   **OKR writing rules — apply to every set:**
+   - Objective: qualitative and directional — no numbers in the objective. It should be inspiring but not measurable on its own.
+   - Key Results: specific, measurable, time-bound — always a number with a timeframe. "Improve NPS" is not a KR. "Increase NPS from 32 to 45 by end of quarter" is.
+   - Each KR must be independently measurable — it cannot depend on another KR to be meaningful.
+   - Avoid output KRs ("launch 3 features") — focus on outcomes ("increase feature adoption from 12% to 25%").
+   - 60–70% confidence target — ambitious but achievable. If the team is certain they will hit it, the target is too low.
 
 5. **Example Format**:
    ```
    Objective: Delight new users with an effortless onboarding experience
+
    Key Results:
-   - CSAT score >= 75% on onboarding survey
-   - 66%+ of onboardings completed within two days
-   - Average time-to-value (TTV) <= 20 minutes
+   - CSAT score ≥ 75% on onboarding survey by end of quarter | Owner: [PM name]
+   - 66%+ of onboardings completed within two days of signup | Owner: [PM name]
+   - Average time-to-value (TTV) ≤ 20 minutes | Owner: [Engineering lead]
    ```
 
 6. **Structure Output**: Present all three OKR sets with equal weight. For each, include:
-   - Objective (1-2 sentences)
-   - Three Key Results (specific metrics with targets)
+   - Objective (1-2 sentences, no numbers)
+   - Three Key Results (specific metric + target + timeframe + owner)
    - Brief rationale (why this matters to the company and team)
 
 7. **Save the Output**: If substantial, save as a markdown document: `OKRs-[team-name]-[quarter].md`
@@ -69,6 +75,7 @@ OKRs are fundamentally about: (1) Setting a single, inspiring goal. (2) Empoweri
 - Avoid output-focused metrics (e.g., "launch 5 features"); focus on outcomes
 - All three OKR sets should be credible, not one clearly better than others
 - Flag any assumptions about data availability
+- If the user provides current metric baselines, use them in the KRs — never set targets without anchoring to a current number
 
 ---
 

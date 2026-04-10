@@ -273,14 +273,16 @@ Before creating anything in Jira, always show a proposed structure summary and w
 Here is the proposed Jira structure. Confirm and I will create everything:
 
 EPIC: [Epic title]
-├── PRD task:    PRD — [Initiative name]
-├── Design task: Design — [Initiative name]
-├── [Feature task 1 title]
-├── [Feature task 2 title]
-├── [Feature task 3 title]
-└── [Feature task N title]
+├── PRD task (Product Task):    PRD — [Initiative name]
+├── Design task (Product Task): Design — [Initiative name]
+└── Tech task (Tech Task):      [Initiative name]
 
-Total: 1 epic, N tasks
+Total: 1 epic, 3 core tasks
+
+Optional tasks — I will ask before creating any of these:
+- QA task
+- Tech Design spike
+- Ops / Comms task
 
 Type yes to create in Jira, or tell me what to change.
 ```
@@ -289,27 +291,121 @@ If multiple epics are proposed, show all of them in the same structure. Do not c
 
 ## Step 7: Create in Jira
 
-After the user confirms the structure, create items in this order using the issue types confirmed in Step 0:
+After the user confirms the structure, create items in this order using the issue types confirmed in Step 0.
+
+**Jira field rules — apply to every item created:**
+- Link tasks to their parent epic using the `parent` field (e.g. `parent: "CCZ-123"`). Never use `customfield_10014` — this is the legacy Epic Link field and is not supported on next-gen/team-managed Jira projects.
+- Jupiter boards have two non-tech task types: `Product Task` (for PM and Design work) and `Tech Task` (for engineering). There is no dedicated "Design Task" issue type — design work is a `Product Task` distinguished by naming convention only.
+
+**Creation order:**
 
 1. Create the Epic with:
    - Summary: epic title
    - Description: one-line problem statement + link to PRD + link to Figma (if available)
-   - Expected Impact: value provided by the user in Step 0
+   - Expected Impact: value from Step 0
 
 2. Create the PRD task as a child of the Epic:
+   - Issue type: `Product Task`
    - Summary: "PRD — [Initiative name]"
    - Description: link to the Confluence PRD page + note to set committed date when moving to In Progress
 
 3. Create the Design task as a child of the Epic:
+   - Issue type: `Product Task`
    - Summary: "Design — [Initiative name]"
    - Description: link to the Figma file + note that this must be a separate task from the PRD task, with its own committed date
 
-4. Create each feature breakdown task as a child of the Epic:
-   - Summary: action-oriented title from the backlog
-   - Description: job story + acceptance criteria + priority
-   - Include a note: "Tech to add committed dates and original estimates when picking up"
+4. Create one Tech Task as a child of the Epic:
+   - Issue type: `Tech Task`
+   - Summary: "[Initiative name]"
+   - Description: include the full story breakdown from Steps 2–3 (job stories, acceptance criteria, priorities). Tech creates their own sub-task breakdown internally after PRD and Design are Done — this task covers the entire initiative, not individual features.
+   - Include a note: "Tech to add committed dates and original estimates when picking up. Sub-task breakdown is at tech team's discretion."
+
+5. After creating the 3 core tasks, surface the optional task list and ask before creating any of them:
+   > "Core tasks created. Would you like me to also create any of these optional tasks?
+   > - QA task
+   > - Tech Design spike
+   > - Ops task
+   > - Comms task
+   >
+   > Reply with which ones to create, or 'none' to finish."
+
+   Wait for an explicit answer. Do not pre-create optional tasks.
 
 Return a table of all created items with keys and URLs.
+
+## Jupiter Jira Lifecycle Reference
+
+Use this when advising on Epic/task status, sequencing, mandatory fields, or Definition of Done.
+
+### Epic lifecycle
+
+```
+To Do → PRD → Design → Tech → QA → Awaiting Release → Measuring Impact → Closed
+<Any status> → Blocked
+```
+
+- **Awaiting Release** — feature is built and tested; the app release is a few days out
+- **Measuring Impact** — post-launch; Epic stays here until PM fills in Actual Impact, then moves to Closed
+- Epic status is driven by the completion of underlying tasks — PM owns the transition
+
+### Task lifecycle
+
+```
+To Do → In Progress → Review → Done
+<Any status> → Blocked
+```
+
+- **Committed Date** — set when a task moves to In Progress. It never changes after that. This is the date the team committed to.
+- **Due Date** — updated by the task owner as the real expected delivery date. Comparing Due Date to Committed Date shows delays.
+- When marking Done, update Due Date one final time to the actual finish date.
+- For Tech Tasks: engineers add an original estimate when picking up the task.
+
+### Sequencing rules
+
+Tasks follow a sequential lifecycle — the next phase starts only after the previous is Done:
+
+```
+PRD Task Done → Design Task starts → Design Task Done → Tech Task starts
+```
+
+Parallel work is an exception that must be explicitly agreed between PM, Design, and Engineering.
+
+### Definition of Done
+
+**PRD Task (`PRD — [Epic name]`)**
+- Problem space fully defined: user scenarios, jobs to be done, happy path + edge cases
+- Solution space defined with clear scope boundaries
+- At least 1 review done with Design and Engineering
+- One round of comments addressed and incorporated
+
+**Design Task (`Design — [Epic name]`)**
+- All key screens and edge cases covered in Figma
+- Design reviewed with PM and Engineering
+- Final Figma handoff complete (specs, assets, interaction flows)
+- PRD updated to reflect any scope decisions made during design
+
+**Tech Task (`[Epic name]`)**
+- Tech lead has broken down dev into sub-tasks with engineers assigned and committed dates set
+- Code merged, deployed to staging, self-tested by engineer
+- Ready for QA — no known blockers
+
+**QA Task (optional, `QA — [Epic name]`)**
+- All test cases run and results documented
+- No critical issues open
+- Ready for release sign-off
+
+### Mandatory Epic fields
+
+| Field | Owner | When required |
+|---|---|---|
+| Expected Impact (quantified) | PM | Before Tech Task starts |
+| Tech t-shirt sizing | Tech lead + EM | After PRD Task is Done |
+| OKR / Initiative field | PM | At Epic creation |
+| Actual Impact | PM | After launch, before closing |
+
+Always prompt the PM for Expected Impact if not provided — Tech cannot start without it.
+
+---
 
 ## Step 8: Offer Next Actions
 

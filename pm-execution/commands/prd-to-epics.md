@@ -1,11 +1,11 @@
 ---
-description: Convert a PRD into Jira-ready Epics and Stories — reads from text, file, or Confluence; optional Figma URL for design context. Uses Job Story format with strategic WHY. Epic + Story level only, no tasks.
+description: Convert a PRD into Jira-ready Epics — each gets 1 Product Task + 1 Design Task + 1 Tech Task created automatically, with DoD explained. Additional tasks are suggested but require user confirmation. Follows Jupiter Jira process loaded from config.
 argument-hint: "<prd-text | confluence-url | file-path> [figma-url]"
 ---
 
-# /prd-to-epics — PRD to Epic and Story Backlog
+# /prd-to-epics — PRD to Epic and Task Backlog
 
-Convert any PRD into a sprint-ready hierarchy of **Epics and Stories**. Pulls design context from Figma when available. Creates items directly in Jira when Atlassian MCP is connected.
+Convert any PRD into a sprint-ready hierarchy of **Epics with 3 core tasks each**. Follows the Jupiter Jira process (loaded from `~/.claude/configs/pm/jira-process.md`).
 
 ## Invocation
 
@@ -17,93 +17,60 @@ Convert any PRD into a sprint-ready hierarchy of **Epics and Stories**. Pulls de
 /pm-execution:prd-to-epics [PRD] https://figma.com/design/...       # PRD + Figma design
 ```
 
-## What it does
+## Steps
 
-Apply the **prd-to-epics** skill:
+### Step 0 — Gather inputs
 
-### Step 0 — Gather Inputs
-
-**PRD source:**
-- If text is pasted → use directly
-- If a file path → read the file
-- If a Confluence URL → fetch via Atlassian MCP (`getConfluencePage`)
-- If Atlassian MCP is not connected → prompt the user to connect it, or paste the PRD
-
-**Figma source (optional):**
-- If a Figma URL is provided → call `get_design_context` to extract screen flows, component names, and interaction states to enrich acceptance criteria
-- If not provided → ask once; proceed without it if skipped
+- Text pasted → use directly
+- File path → read the file
+- Confluence URL → fetch via Atlassian MCP (`getConfluencePage`)
+- Figma URL (optional) → call `get_design_context` to enrich task descriptions with screen names
+- If any source is unavailable → prompt the user before continuing
 
 ### Step 1 — Parse the PRD
 
-Extract: problem statement, success metrics, features (with P0/P1/P2), user segments, phases/release plan, out-of-scope items, risks, open questions.
+Extract: problem statement, success metrics, features (P0/P1/P2), user segments, phases, out-of-scope items, open questions.
 
 ### Step 2 — Identify Epics (3–7)
 
-Group features by user journey, feature area, or release phase. Name each Epic as a **user/business outcome**, not a feature label.
+Group features by user journey, feature area, or release phase. Name each Epic as a **user or business outcome**, not a feature label.
 
-### Step 3 — Write Stories under each Epic
+Present the proposed epic list and confirm with the user before creating anything in Jira.
 
-Each story uses a **hybrid Job Story + WWA format**:
+### Step 3 — Create 3 tasks per Epic (no extra confirmation needed)
 
-```
-Why (Strategic Context): [connects to epic goal and business objective]
+For each confirmed epic, create immediately in Jira:
 
-Job Story:
-When [specific situation],
-I want to [motivation],
-so I can [outcome].
+1. `PRD - [Epic name]` — `Product Task` type
+2. `Design - [Epic name]` — `Product Task` type
+3. `Tech - [Epic name]` — `Tech Task` type
 
-Acceptance Criteria:
-- [ ] [Observable, testable condition]
-- [ ] [Edge case or error state]
-- [ ] [Performance or accessibility requirement]
+Use the `parent` field to link each task to its epic. See `jira-process.md` for full field conventions.
 
-Priority: P0/P1/P2 | Effort: S/M/L | Dependencies: [Story IDs]
-```
+After creating, output a table of all created ticket keys and links, then share the **Definition of Done** for each task type exactly as defined in `jira-process.md`.
 
-**Rules:**
-- Stories only — no tasks, no sub-tasks
-- Every story is independent and sprint-sized
-- Acceptance criteria are QA-verifiable without interpretation
-- Figma screen names and states appear in AC when design context is available
+### Step 4 — Suggest additional tasks (ask, never auto-create)
 
-### Step 4 — Output Backlog
+After the 3 core tasks are live, present the optional tasks from `jira-process.md` (QA, Tech Design, Ops, Comms) and ask which the user wants created. Wait for explicit confirmation. Create only what is confirmed.
 
-Delivers a full markdown backlog:
+### Step 5 — Output summary
 
 ```
-# [Feature Name] — Epic and Story Backlog
+# [Feature Name] — Epic and Task Summary
 
-| Epic | Title | Phase | Priority | Stories |
-|------|-------|-------|----------|---------|
-...
-
-[Epics with nested Stories]
+| Epic | PRD Task | Design Task | Tech Task | Additional |
+|------|----------|-------------|-----------|------------|
+| [KEY] Name | [KEY] | [KEY] | [KEY] | — |
 
 Out of Scope
 Open Questions
 PRD Gaps Detected
 ```
 
-### Step 5 — Offer Next Actions
-
-- Create in Jira via Atlassian MCP
-- Generate test scenarios for an Epic
-- Run a pre-mortem on the backlog
-- Export as markdown
-
 ## Example
 
 ```
-/pm-execution:prd-to-epics https://acme.atlassian.net/wiki/spaces/PROD/pages/12345 https://figma.com/design/abc123/Checkout-v2
+/pm-execution:prd-to-epics https://acme.atlassian.net/wiki/spaces/PROD/pages/12345
 ```
 
-→ Fetches PRD from Confluence, pulls Figma design context, outputs 5 Epics and 23 Stories with Figma screen references in acceptance criteria. Offers to create directly in Jira.
-
-## Notes
-
-- Epic + Story only — never tasks; implementation details belong in acceptance criteria
-- The Job Story format ("When I am...") captures real user situations, not abstract roles
-- The strategic Why in each story lets engineers scope edge cases correctly without checking the PRD
-- Out-of-scope PRD items are listed explicitly — they do not get stories
-- PRD gaps are surfaced, never silently filled with assumptions
+→ Fetches PRD, proposes epics, creates 3 tasks per epic, shares DoD, then asks about optional tasks.
