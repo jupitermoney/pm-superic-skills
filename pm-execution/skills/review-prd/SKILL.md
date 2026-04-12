@@ -338,16 +338,26 @@ Common deductions:
 
 | Sub-dimension | Max | What earns full marks |
 |---|---|---|
-| Baselines exist for all targets | 5 | Every target has a "today" number. "Increase from X to Y" not "improve Z." |
-| Targets are specific and defensible | 5 | Targets have a methodology or reasoning. Not picked from air. Flagged as estimates with a stated confidence level if data is limited. |
-| Guardrail metrics defined | 5 | What must not worsen? Named specifically, not "we'll monitor." |
+| Baselines exist for all targets | 5 | Every target has a "today" number. "Increase from X to Y" not "improve Z." New use cases with no baseline are labelled "TBD — establish at launch", not left blank. |
+| Targets are specific and defensible | 5 | Targets have a methodology or reasoning. Include a timeframe ("45% within 90 days of launch"). Flagged as estimates with a stated confidence level if data is limited. |
+| Guardrail metrics defined | 5 | What must not worsen? Named specifically with a threshold, not "we'll monitor." |
+
+**Metric quality checklist — apply when scoring this dimension:**
+
+- **Primary vs secondary distinction** — are metrics with an existing baseline called out separately from new-use-case metrics with no baseline? New-use-case metrics should be labelled "TBD — establish at launch", not given an invented target.
+- **Measurement column** — does each metric name the tool and event that will measure it (e.g. "Amplitude — bottomsheet_engaged event")? "Tracked in Amplitude" is not sufficient.
+- **Timeframe on every target** — "increase X" is not a target. "Increase X from Y to Z within 90 days of launch" is.
+- **Metric hierarchy** — are metrics ordered by what actually matters? The correct priority order for product features is: Reach (exposure) → Engagement (interaction) → Dismissal (negative signal) → Sentiment (NPS, reviews) → Outcome (downstream conversion). Jumping straight to outcome metrics without tracking reach and engagement is a coverage gap.
+- **Outcome vs activity** — are the primary metrics outcome-based (user behaviour changed) or activity-based (feature was built, event was fired)? Activity metrics do not prove the feature worked.
 
 Common deductions:
 - Targets with no baselines: -5
 - Guardrail metrics absent: -5
 - Metrics are activity metrics, not outcome metrics: -4
-- No measurement timeline: -2
-- Measurement method not specified: -2
+- No measurement timeline on any target: -2
+- Measurement method not named (tool + event absent): -2
+- New-use-case metrics given invented targets instead of "TBD — establish at launch": -2
+- No primary/secondary distinction — all metrics treated as equally important: -2
 
 **Calibration rule:** If metric targets are self-flagged as directional estimates and the PRD maturity is pre-engineering or pre-launch, treat this as a blocking gap — not a minor note. An unconfirmed business case at sign-off stage means the initiative has not been validated. Deduct 5 pts from this dimension and flag as a Priority Fix.
 
