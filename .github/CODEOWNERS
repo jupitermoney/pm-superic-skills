@@ -1,0 +1,22 @@
+# CODEOWNERS — pm-superic-skills
+#
+# All PRs require review. This file controls who must review what.
+# Abhishek is the sole approver for skill logic and command files.
+# Learnings files and jupiter-context updates are open contributions
+# but still flow through Abhishek's review.
+
+# Default: Abhishek reviews everything
+* @abhishekchoudhari
+
+# Skill files — Abhishek is the sole curator
+**/SKILL.md @abhishekchoudhari
+
+# Command files — Abhishek controls skill invocation logic
+**/commands/*.md @abhishekchoudhari
+
+# Learnings files — open contributions, Abhishek still approves
+**/learnings.md @abhishekchoudhari
+
+# Jupiter context — anyone on the Jupiter team can contribute
+# Abhishek reviews for accuracy before merging
+jupiter-context/ @abhishekchoudhari

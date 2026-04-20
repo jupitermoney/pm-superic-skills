@@ -1,0 +1,74 @@
+name: Notify Jupiter PMs on Update
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Get changed files summary
+        id: changes
+        run: |
+          CHANGED=$(git diff --name-only HEAD~1 HEAD | head -20 | sed 's/^/• /' | tr '\n' '\n')
+          COMMIT_MSG=$(git log -1 --pretty=format:"%s")
+          AUTHOR=$(git log -1 --pretty=format:"%an")
+          SHORT_SHA=$(git log -1 --pretty=format:"%h")
+          COMMIT_URL="https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
+
+          echo "changed<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGED" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          echo "commit_msg=$COMMIT_MSG" >> $GITHUB_OUTPUT
+          echo "author=$AUTHOR" >> $GITHUB_OUTPUT
+          echo "short_sha=$SHORT_SHA" >> $GITHUB_OUTPUT
+          echo "commit_url=$COMMIT_URL" >> $GITHUB_OUTPUT
+
+      - name: Post to Slack
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          curl -s -X POST "$SLACK_WEBHOOK_URL" \
+            -H 'Content-Type: application/json' \
+            -d '{
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "PM Skills updated"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*${{ steps.changes.outputs.commit_msg }}*\nBy ${{ steps.changes.outputs.author }} — <${{ steps.changes.outputs.commit_url }}|view commit>"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Files changed:*\n${{ steps.changes.outputs.changed }}"
+                  }
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*How to update:*\n*Cowork:* Open Customize > Plugins > pm-superic-skills > Update\n*Claude Code CLI:* Run the install command again for any updated plugin:\n```claude plugin install pm-execution@pm-superic-skills```"
+                  }
+                }
+              ]
+            }'

@@ -44,6 +44,16 @@ Commands use skills. Some skills serve multiple commands. Some skills (like `pri
 
 Commands are designed to flow into each other, matching the PM workflow. After any command completes, it suggests relevant next commands — just follow the prompts.
 
+## Jupiter Money PMs
+
+If you are a Jupiter PM, start here: **[jupiter-context/SETUP.md](jupiter-context/SETUP.md)**
+
+One command installs everything and Jupiter context (org structure, Jira boards, OKR conventions, engineering contacts) loads automatically in every session. No manual configuration needed.
+
+To contribute a learning or update team context, open a PR. See the setup guide for the contribution flow.
+
+---
+
 ## Installation
 
 ### Claude Cowork (recommended for non-developers)
