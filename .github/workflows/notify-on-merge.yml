@@ -67,7 +67,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*How to update:*\n*Cowork:* Open Customize > Plugins > pm-superic-skills > Update\n*Claude Code CLI:* Run the install command again for any updated plugin:\n```claude plugin install pm-execution@pm-superic-skills```"
+                    "text": "*How to update:*\n```git pull && bash setup.sh```"
                   }
                 }
               ]
