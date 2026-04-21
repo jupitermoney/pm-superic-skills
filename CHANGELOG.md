@@ -45,6 +45,13 @@ Most recent changes appear first.
 
 ---
 
+## April 21 2026
+
+### Slack notifications
+- Slack webhook configured — update notifications now post automatically on every merge to main.
+
+---
+
 ## How to read this
 
 Each entry describes what changed and what it affects. If you see a skill name, that skill's behaviour has changed — update your plugin to get it.
