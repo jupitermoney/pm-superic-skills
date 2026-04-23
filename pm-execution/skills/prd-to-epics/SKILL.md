@@ -48,14 +48,9 @@ If no Jira project has been specified, ask: "Which Jira project and board should
 
 ### Expected Impact Check
 
-Scan the PRD for an Expected Impact statement. Look in the success metrics, objectives, or overview sections — use the primary metric target as the Expected Impact value (e.g. "Reduce president escalations to 0 within 60 days of launch").
+Scan the PRD for an Expected Impact statement. Look in the success metrics, objectives, or overview sections. Extract the primary metric target as a single line (e.g. "Reduce president escalations to 0 within 60 days of launch"). You will confirm this with the PM in Step 6 before creating anything.
 
-- If found: use it to populate the Expected Impact field on the Epic automatically. No need to ask the user.
-- If not found: warn the user before proceeding:
-
-> "Note: Expected Impact is a mandatory field on every Epic in Jira and I couldn't find a clear target in the PRD. I'll create the Epic now, but fill this field before handing the initiative to tech."
-
-Proceed with Epic creation regardless. Do not block on this field.
+If not found in the PRD, ask for it in the Step 6 pre-flight conversation.
 
 ### PRD Source Check
 
@@ -69,13 +64,11 @@ Before proceeding, determine where the PRD lives:
 
      > "To pull your PRD from Confluence, please connect the Atlassian MCP server. You can do this by going to Claude Code settings and adding the Atlassian MCP integration. Once connected, re-run this command with your Confluence page URL. Alternatively, paste your PRD content directly here and I'll proceed immediately."
 
-4. **If no PRD is provided at all**, ask:
+4. **If no PRD is provided**, ask whether the user wants to:
+   - Provide a PRD now (paste, file path, or Confluence URL)
+   - Create a placeholder epic to reserve space in Jira before the PRD is ready
 
-   > "Please share your PRD. You can:
-   > - Paste it directly here
-   > - Provide a file path (e.g. `/docs/PRD-checkout.md`)
-   > - Share a Confluence page URL (requires Atlassian MCP to be connected)
-   > - Describe the feature verbally and I'll work with that"
+   If placeholder: skip Steps 1-5 and go directly to Step 6 (placeholder path).
 
 ### Figma Source Check
 
@@ -87,6 +80,8 @@ Figma designs are often not ready when a PRD is being broken into epics. Do not 
 ---
 
 ## Step 1: Parse and Understand the PRD
+
+> Skip this step if no PRD is available. Go directly to Step 6 (placeholder epic path).
 
 Read the PRD carefully and extract:
 
@@ -265,71 +260,105 @@ These need answers before stories can be estimated or started:
 
 ---
 
-## Step 6: Show Structure and Confirm Before Creating in Jira
+## Step 6: Pre-flight Conversation
 
-Before creating anything in Jira, always show a proposed structure summary and wait for explicit confirmation. Format it as:
+Before creating anything in Jira, have a brief thinking-partner conversation with the PM. Ask the questions below before proposing a structure. Never assume. Never make decisions on their behalf.
+
+### PRD provided
+
+Ask these questions (you can group into one message if it reads naturally):
+
+**1. Design work needed?**
+> "Will this initiative need design work?
+> - Yes: I will create Product Task + Design Task + Tech Task
+> - No: I will create Product Task + Tech Scoping"
+
+**2. OKR link**
+> "Which OKR does this link to?"
+
+If the PM is unsure, flag a soft warning and continue:
+> "Worth confirming before investing time. If this does not map to a current OKR it may be hard to prioritise. Not a blocker for now."
+
+**3. Priority**
+> "What priority is this? (P0 / P1 / P2)"
+
+**4. Expected Impact**
+Show what was extracted from the PRD and ask for confirmation:
+> "I will set Expected Impact as: [extracted impact in one line]. Does this look right, or would you like to update it?"
+
+**5. Proposed structure**
+
+Once all answers are in, show:
 
 ```
-Here is the proposed Jira structure. Confirm and I will create everything:
+Proposed Jira structure. Type yes to create, or tell me what to change:
 
 EPIC: [Epic title]
-├── PRD task (Product Task):    PRD — [Initiative name]
-├── Design task (Product Task): Design — [Initiative name]
-└── Tech task (Tech Task):      [Initiative name]
+  PRD Task (Product Task):   PRD - [Initiative name]
+  Design Task (Design Task): Design - [Initiative name]   [only if design confirmed]
+  Tech Task (Tech Task):     [Initiative name]
+  or
+  Tech Scoping (Tech Task):  Tech Scoping - [Initiative name]   [if no design]
 
-Total: 1 epic, 3 core tasks
-
-Optional tasks — I will ask before creating any of these:
-- QA task
-- Tech Design spike
-- Ops / Comms task
-
-Type yes to create in Jira, or tell me what to change.
+OKR: [confirmed value, or "not yet linked"]
+Priority: [P0 / P1 / P2]
+Expected Impact: [single line]
+PRD: [link, or "not available"]
+Sequence: PRD Task Done -> Design Task Done -> Tech Task starts
 ```
 
-If multiple epics are proposed, show all of them in the same structure. Do not create anything until the user confirms.
+Do not create anything until the PM confirms.
+
+---
+
+### No PRD available (placeholder epic)
+
+Ask only:
+1. What is the initiative name?
+2. What is the expected impact? (one sentence)
+3. What is the target date?
+4. Will design work be needed?
+5. Which OKR does this link to? (soft warning if unknown)
+
+Then show the proposed structure and wait for confirmation. Do not generate stories for placeholder epics.
 
 ## Step 7: Create in Jira
 
-After the user confirms the structure, create items in this order using the issue types confirmed in Step 0.
+After the user confirms the structure in Step 6, create items in this order using the issue types confirmed in Step 0.
 
-**Jira field rules — apply to every item created:**
-- Link tasks to their parent epic using the `parent` field (e.g. `parent: "CCZ-123"`). Never use `customfield_10014` — this is the legacy Epic Link field and is not supported on next-gen/team-managed Jira projects.
-- Jupiter boards have two non-tech task types: `Product Task` (for PM and Design work) and `Tech Task` (for engineering). There is no dedicated "Design Task" issue type — design work is a `Product Task` distinguished by naming convention only.
+**Formatting rules (apply to every description written):**
+- Always pass `contentFormat: "markdown"` when creating or editing descriptions.
+- Never use horizontal rules (`---`) inside descriptions.
+- Never use em dashes in any written content. Use a colon or rewrite the sentence.
+- Use `**bold**` for labels, `-` for bullet lists, and plain line breaks between sections.
+
+**Jira field rules (apply to every item created):**
+- Link tasks to their parent epic using the `parent` field (e.g. `parent: "CCZ-123"`). Never use `customfield_10014`.
+- Use the issue types confirmed in Step 0. Most Jupiter boards support `Product Task`, `Design Task`, and `Tech Task`. Use `Design Task` for design work if available on the board; fall back to `Product Task` only if it is not.
+- Never set an assignee at creation. Leave it blank.
 
 **Creation order:**
 
-1. Create the Epic with:
-   - Summary: epic title
-   - Description: one-line problem statement + link to PRD + link to Figma (if available)
-   - Expected Impact: value from Step 0
+1. Create the Epic:
+   - Summary: epic title (outcome-focused, 5-8 words, no em dashes)
+   - Description (markdown): 2-3 sentences on the problem being solved. Include PRD link if available.
+   - Expected Impact: single line confirmed in Step 6
+   - OKR field: value from Step 6, or leave blank
 
-2. Create the PRD task as a child of the Epic:
+2. Create the PRD task:
    - Issue type: `Product Task`
-   - Summary: "PRD — [Initiative name]"
-   - Description: link to the Confluence PRD page + note to set committed date when moving to In Progress
+   - Summary: `PRD - [Initiative name]`
+   - Description (markdown): PRD Confluence link if available. One paragraph on what the PRD must cover: problem definition, happy path, edge cases, open questions. DoD reminder.
 
-3. Create the Design task as a child of the Epic:
-   - Issue type: `Product Task`
-   - Summary: "Design — [Initiative name]"
-   - Description: link to the Figma file + note that this must be a separate task from the PRD task, with its own committed date
+3. Create the Design task (only if confirmed in Step 6):
+   - Issue type: `Design Task` (or `Product Task` if Design Task is not on the board)
+   - Summary: `Design - [Initiative name]`
+   - Description: invoke the `pm-design-brief` skill with the PRD and Figma URL (if available) as inputs, and the Design Task key as `$DESIGN_TASK`. The skill will generate the full brief and post it directly into the Design Task. Do not write a manual description for this task.
 
-4. Create one Tech Task as a child of the Epic:
-   - Issue type: `Tech Task`
-   - Summary: "[Initiative name]"
-   - Description: include the full story breakdown from Steps 2–3 (job stories, acceptance criteria, priorities). Tech creates their own sub-task breakdown internally after PRD and Design are Done — this task covers the entire initiative, not individual features.
-   - Include a note: "Tech to add committed dates and original estimates when picking up. Sub-task breakdown is at tech team's discretion."
-
-5. After creating the 3 core tasks, surface the optional task list and ask before creating any of them:
-   > "Core tasks created. Would you like me to also create any of these optional tasks?
-   > - QA task
-   > - Tech Design spike
-   > - Ops task
-   > - Comms task
-   >
-   > Reply with which ones to create, or 'none' to finish."
-
-   Wait for an explicit answer. Do not pre-create optional tasks.
+4. Create the Tech task:
+   - If design confirmed: issue type `Tech Task`, summary `[Initiative name]`
+   - If no design: issue type `Tech Task`, summary `Tech Scoping - [Initiative name]`
+   - Description (markdown): full scope breakdown from Steps 2-3 if PRD is available (phases, acceptance criteria, dependencies). For placeholder epics, write a 1-2 sentence scope note. Always include: "Tech to add committed dates, estimates, and sub-task breakdown when picking up."
 
 Return a table of all created items with keys and URLs.
 
@@ -407,15 +436,22 @@ Always prompt the PM for Expected Impact if not provided — Tech cannot start w
 
 ---
 
-## Step 8: Offer Next Actions
+## Step 8: Post-Creation Reminder and Next Actions
 
-After delivering the backlog and creating in Jira, offer:
+After returning the created items table, always surface this reminder to the PM:
+
+> **Action required:**
+> 1. Set a committed date and due date on the PRD task before moving it to In Progress. If the PRD is already written, you can move it to In Progress now but set both dates first.
+> 2. Design and Tech tasks must not start until the previous phase is Done.
+> 3. If OKR was not confirmed: link this epic to an OKR before Tech starts.
+
+Then offer:
 
 > **What would you like to do next?**
-> - **A** — Generate test scenarios for a specific Epic
-> - **B** — Run a pre-mortem on this backlog
-> - **C** — Export as markdown file
-> - **D** — Refine a specific Epic or Story
+> - **A** - Generate test scenarios for a specific Epic
+> - **B** - Run a pre-mortem on this backlog
+> - **C** - Export as markdown file
+> - **D** - Refine a specific Epic or Story
 
 ---
 
