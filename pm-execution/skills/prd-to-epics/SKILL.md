@@ -20,6 +20,27 @@ Each story uses a hybrid format combining **Job Stories** (When/I want/So I can)
 
 ## Step 0: Gather Inputs
 
+### Epic Structure Choice
+
+**This is the first question to ask — before parsing the PRD, before searching Jira, before anything else.**
+
+Ask the PM:
+
+> "Before I break this down — how would you like to structure this in Jira?
+>
+> **A — Single Project Epic** — One epic, all stories nested under it. Best for quick builds, focused initiatives, or work that fits within one team's sprint cycle.
+>
+> **B — Multiple Epics** — 3–7 epics grouped by user journey, feature area, or release phase. Best for large initiatives, multi-team work, or phased delivery across quarters.
+>
+> Which would you like?"
+
+- If **A**: use exactly 1 epic for the entire initiative. All stories live under it. Skip the multi-epic summary table in Step 5 and replace it with a single epic block.
+- If **B**: follow the default multi-epic flow (3–7 epics, grouped by user journey or phase).
+
+Wait for the user's answer before continuing.
+
+---
+
 ### Overlapping Epic Check
 
 Before creating anything in Jira, search the board for existing epics that might overlap with this initiative. Use `searchJiraIssuesUsingJql` with a query like:

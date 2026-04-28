@@ -138,13 +138,23 @@ Write for a primary school graduate. No jargon. No acronyms without spelling out
 
 ---
 
-### Step 2: Offer Next Steps
+### Step 2: Run CEO Review (always, unless user says skip)
 
-After delivering the PRD, offer:
-- "Want me to **run a pre-mortem** on the solution design?"
-- "Should I **break this into epics and user stories** for engineering?"
-- "Want me to **review this PRD** with a CPO-level critique and score?"
+After the PRD is confirmed ready, automatically run the CEO review:
+
+> "PRD is ready. Running CEO review now — this will stress-test it like a skeptical leadership reviewer, catch gaps, and give you a completion summary."
+
+Read and execute `pm-execution/skills/prd-ceo-review/SKILL.md` using the PRD content from this session. Do not ask the user to paste the PRD again.
+
+The user may say "skip review" to bypass this step. Otherwise it is mandatory.
+
+### Step 3: Offer Next Steps
+
+After the CEO review, offer:
+- "Should I **update the PRD** based on the review findings?"
+- "Want me to **break this into epics and user stories** for engineering?"
 - "Should I **draft a stakeholder update** to socialise this?"
+- "Want me to **run a pre-mortem** on the highest-risk failure modes?"
 
 ## Notes
 
